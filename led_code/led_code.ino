@@ -171,7 +171,7 @@ void blinkLED(int r, int g, int b, Adafruit_NeoPixel * strip) {
 void crazy(Adafruit_NeoPixel * strip) {
   if(!crazyOn) return;
   crazyOn = false;
-  for(int i = 0; i < strip->numPixels(); i += 3) {
+  for(int i = 0; i < strip->numPixels(); i ++) {
     int randNum = random(0, 3);
     if(randNum == 0) strip->setPixelColor(i, 255, 255, 255);
     if(randNum == 1) strip->setPixelColor(i, 0, 255, 0);
