@@ -3,15 +3,13 @@
 #include <Wire.h>
 
 #define NUM_PIXELS 30
-#define TOP_PIN    7
-#define REAR_PIN   6
-#define FRONT_PIN  5
+#define LED_PIN   6
 #define DEVICE_ID  1
 
 #define LED_SPEED   900
 #define FADE_SPEED  700
 
-Adafruit_NeoPixel topStrip = Adafruit_NeoPixel(NUM_PIXELS, REAR_PIN, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel topStrip = Adafruit_NeoPixel(NUM_PIXELS, LED_PIN, NEO_GRB + NEO_KHZ800);
 
 NeoPixelPainterCanvas topCanvas = NeoPixelPainterCanvas(&topStrip); //create canvas, linked to the neopixels (must be created before the brush)
 NeoPixelPainterBrush topBrush = NeoPixelPainterBrush(&topCanvas); //crete brush, linked to the canvas to paint to
@@ -41,7 +39,7 @@ bool runDefault = true;
 
 void setup() {
 
-  pinMode(REAR_PIN, OUTPUT);
+  pinMode(LED_PIN, OUTPUT);
 
   Wire.begin(DEVICE_ID);
   Wire.onReceive(receiveEvent);
