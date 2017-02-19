@@ -32,11 +32,6 @@ bool add = true;
 //crazy variables
 bool crazyOn = true;
 
-//defaultLED variables
-long timeout = 5000;
-long lastReceivedTime = 0;
-bool runDefault = true;
-
 void setup() {
 
   pinMode(LED_PIN, OUTPUT);
@@ -56,15 +51,14 @@ void setup() {
 }
 
 void loop() {
-  if(millis() - lastReceivedTime >= timeout) runDefault = true;
-  if(runDefault) {
+  if(command.equals("default")) {
     defaultLED(&topStrip, &topCanvas, &topBrush);
-  }else if(command.equals("solid")) {
+  } else if(command.equals("solid")) {
     setStripColor(desiredR, desiredG, desiredB, &topStrip);
   }else if(command.equals("pulse")) {
     pulse(desiredR, desiredG, desiredB, &topStrip);
   }else if(command.equals("run")) {
-    runLED(desiredR, desiredG, desiredB, &topStrip, &topCanvas, &topBrush);
+    runLED(desiredR, desiredG, desiredB, &topStrip, &topCanvas, &topBrush, false);
   }else if(command.equals("blink")) {
     if(lastLedTime + ledDelay < millis()) blinkLED(desiredR, desiredG, desiredB, &topStrip);
   }else if(command.equals("crazy")) {
@@ -110,8 +104,6 @@ void parseMessage(String message)
 
 void receiveEvent(int howMany) {
   topStrip.clear();
-  runDefault = false;
-  lastReceivedTime = millis();
   crazyOn = true;
   receivedCommand = "";
   while(Wire.available() > 0)
@@ -141,7 +133,7 @@ void pulse(int r, int g, int b, Adafruit_NeoPixel * strip) {
   setStripColor(brightness * desiredR / 255, brightness * desiredG / 255, brightness * desiredB / 255, strip);
 }
 
-void runLED(int h, int s, int v, Adafruit_NeoPixel * strip, NeoPixelPainterCanvas * canvas, NeoPixelPainterBrush * brush) {
+void runLED(int h, int s, int v, Adafruit_NeoPixel * strip, NeoPixelPainterCanvas * canvas, NeoPixelPainterBrush * brush, bool bounce) {
        HSV brushColor;
        brushColor.h = h; 
        brushColor.s = s; //full saturation
@@ -152,7 +144,8 @@ void runLED(int h, int s, int v, Adafruit_NeoPixel * strip, NeoPixelPainterCanva
        brush->setColor(brushColor); //update the color of the brush
        brush->setFadeout(true);
        brush->setFadeHueNear(false); //fade using the near path on the colorcircle
-
+       brush->setBounce(bounce);
+      
        strip->clear();
 
        brush->paint(); //apply the paint of the first brush to the canvas (and update the brush)
@@ -188,8 +181,7 @@ void crazy(Adafruit_NeoPixel * strip) {
 }
 
 void defaultLED(Adafruit_NeoPixel * strip, NeoPixelPainterCanvas * canvas, NeoPixelPainterBrush * brush) {
-  if(!runDefault) return;
   strip->clear();
-  runLED(212, 255, 255, strip, canvas, brush);
+  runLED(desiredR, desiredG, desiredG, strip, canvas, brush, true);
 }
 
