@@ -63,6 +63,8 @@ void loop() {
     if(lastLedTime + ledDelay < millis()) blinkLED(desiredR, desiredG, desiredB, &topStrip);
   }else if(command.equals("crazy")) {
     crazy(&topStrip);
+  } else {
+    defaultLED(&topStrip, &topCanvas, &topBrush);
   }
    
 }
@@ -171,11 +173,9 @@ void crazy(Adafruit_NeoPixel * strip) {
   crazyOn = false;
   for(int i = 0; i < strip->numPixels(); i += 3) {
     int randNum = random(0, 3);
-    for(int j = i; j <= (i + 3); j++) {
-      if(randNum == 0) strip->setPixelColor(j, 255, 255, 255);
-      if(randNum == 1) strip->setPixelColor(j, 0, 255, 0);
-      if(randNum == 2) strip->setPixelColor(j, 255, 0, 255);
-    }
+    if(randNum == 0) strip->setPixelColor(i, 255, 255, 255);
+    if(randNum == 1) strip->setPixelColor(i, 0, 255, 0);
+    if(randNum == 2) strip->setPixelColor(i, 255, 0, 255);
   }
   strip->show();
 }
