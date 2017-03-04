@@ -45,6 +45,7 @@ void setup() {
 
   Wire.begin(DEVICE_ID);
   Wire.onReceive(receiveEvent);
+  Wire.onRequest(requestEvent);
 
   Serial.begin(115200);
   Serial.println("LED Code");
@@ -124,6 +125,10 @@ void receiveEvent(int howMany) {
         Serial.print(c);
     }
     parseMessage(receivedCommand);
+}
+
+void requestEvent() {
+  Wire.write(centimeterDistance);
 }
 
 void setStripColor(int r, int g, int b, Adafruit_NeoPixel * strip) {
