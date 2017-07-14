@@ -3,7 +3,8 @@
 #include <Wire.h>
 
 #define NUM_PIXELS 30
-#define LED_PIN   6
+#define ACTUAL_NUM_PIXELS 7
+#define LED_PIN   8
 #define DEVICE_ID  1
 
 #define LED_SPEED   900
@@ -63,6 +64,8 @@ void loop() {
     if(lastLedTime + ledDelay < millis()) blinkLED(desiredR, desiredG, desiredB, &topStrip);
   }else if(command.equals("crazy")) {
     crazy(&topStrip);
+  } else if(command.equals("progress")) {
+    
   } else {
     defaultLED(&topStrip, &topCanvas, &topBrush);
   }
@@ -176,6 +179,14 @@ void crazy(Adafruit_NeoPixel * strip) {
     if(randNum == 0) strip->setPixelColor(i, 255, 255, 255);
     if(randNum == 1) strip->setPixelColor(i, 0, 255, 0);
     if(randNum == 2) strip->setPixelColor(i, 255, 0, 255);
+  }
+  strip->show();
+}
+
+void progressBar(int r, int g, int b, int progress, Adafruit_NeoPixel * strip) {
+  int bars = progress / (100 / ACTUAL_NUM_PIXELS);
+  for(int i = 0; i <= bars; i++) {
+    strip->setPixelColor(i, r, g, b);
   }
   strip->show();
 }
