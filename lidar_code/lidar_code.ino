@@ -6,9 +6,11 @@
 #define    MeasureValue        0x04          // Value to initiate ranging.
 #define    RegisterHighLowB    0x8f          // Register to get both High and Low bytes in 1 call.
 
+#define    RoboRIO_ADDRESS     0
+
 #define    MIN_DISTANCE        0
 #define    MAX_DISTANCE        4000
-#define    AVERAGING_THRESHOLD 5
+#define    AVERAGING_THRESHOLD 3
 
 
 int centimeterDistance = 0;
@@ -33,6 +35,11 @@ void lidar() {
   {
     lastDistance = getDistance();
     Serial.println(lastDistance);
+    
+    Wire.beginTransmission((int)RoboRIO_ADDRESS);
+    Wire.write(centimeterDistance);
+    Wire.endTransmission();
+    
   }
 }
 
