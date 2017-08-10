@@ -13,7 +13,6 @@
 #define    AVERAGING_THRESHOLD 3
 
 
-int centimeterDistance = 0;
 int lastDistance = 0;
 
 void setup() {
@@ -37,7 +36,7 @@ void lidar() {
     Serial.println(lastDistance);
     
     Wire.beginTransmission((int)RoboRIO_ADDRESS);
-    Wire.write(centimeterDistance);
+    Wire.write(lastDistance);
     Wire.endTransmission();
     
   }
