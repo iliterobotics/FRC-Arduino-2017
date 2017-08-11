@@ -27,13 +27,12 @@ void loop() {
 }
 
 void lidar() {
-
   requestRanging();
   
   if(requestOutput()) 
   {
     lastDistance = getDistance();
-    Serial.println(lastDistance);
+    Serial.println(lastDistance * .3937);
     
     Wire.beginTransmission((int)RoboRIO_ADDRESS);
     Wire.write(lastDistance);
@@ -59,7 +58,8 @@ bool requestOutput() {
   
   Wire.endTransmission(); // stop transmitting
   delay(20); // Wait 20ms for transmit
-  Wire.requestFrom((int)LIDARLite_ADDRESS, 2); // request 2 bytes from LIDAR-Lite
+  //Serial.println(Wire.available());
+  Wire.requestFrom((int)LIDARLite_ADDRESS, 2,true ); // request 2 bytes from LIDAR-Lite
   return (2 <= Wire.available()); // if two bytes were received
 }
 
@@ -67,12 +67,14 @@ int getDistance() {
   int centimeterDistance;
   
   centimeterDistance = Wire.read(); // receive high byte (overwrites previous reading)
+  
   centimeterDistance = centimeterDistance << 8; // shift high byte to be high 8 bits
   centimeterDistance |= Wire.read(); // receive low byte as lower 8 bits
-
+  
   if(centimeterDistance < MIN_DISTANCE) centimeterDistance = MIN_DISTANCE;
   if(centimeterDistance > MAX_DISTANCE) centimeterDistance = MAX_DISTANCE;
   if(abs(centimeterDistance - lastDistance) < AVERAGING_THRESHOLD) centimeterDistance = (centimeterDistance + lastDistance) / 2;
+  
   
   return centimeterDistance;
 }
