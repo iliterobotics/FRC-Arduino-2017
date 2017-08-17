@@ -32,7 +32,7 @@ void lidar() {
   if(requestOutput()) 
   {
     lastDistance = getDistance();
-    Serial.println(lastDistance * .3937);
+    Serial.println(lastDistance);//In centimeters
     
     Wire.beginTransmission((int)RoboRIO_ADDRESS);
     Wire.write(lastDistance);
